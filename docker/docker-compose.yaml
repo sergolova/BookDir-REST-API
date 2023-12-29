@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+
+  web:
+    build:
+      context: ./web
+    container_name: nginx
+
+    tty: true
+    working_dir: ${APP_PATH_CONTAINER}
+
+    volumes:
+#      config
+      - ${SERVER_CONFIG}:/etc/nginx/conf.d/
+#      app
+      - ${APP_PATH}:${APP_PATH_CONTAINER}
+#      logs
+      - ${SERVER_LOGS}:/var/log/nginx/
+    ports:
+      - ${SERVER_PORT}:80
+    depends_on:
+      - db
+    networks:
+      - app-network
+      
+  php:
+    build: ./php
+    container_name: php-fpm
+    user: "1000:1000"
+    tty: true
+    volumes:
+      - ${APP_PATH}:${APP_PATH_CONTAINER}
+      - ${PHP_CONFIG}:/usr/local/etc/php
+    working_dir: ${APP_PATH_CONTAINER}
+    networks:
+      - app-network
+
+  db:
+    build: ./db
+    container_name: sql-db
+    restart: always
+    tty: true
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+       - ${DB_PATH}:/var/lib/postgresql/data
+    networks:
+        - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
