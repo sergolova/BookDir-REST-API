@@ -1,3 +1,7 @@
 ### get image by id
+GET {{backend}}/images/0e9a3e0e1697fbbb45136833470942aa.jpg
+Accept: application/json
+
+### get image by id, invalid
 GET {{backend}}/images/70248fffd3dd8634969339e33b47b155.png
 Accept: application/json
