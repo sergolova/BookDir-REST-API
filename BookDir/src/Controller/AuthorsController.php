@@ -69,7 +69,8 @@ class AuthorsController extends AbstractController
 
         $result['message'] = $message;
 
-        return $this->json($result, $status);
+        return $this->json($result, $status, [],
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
     }
 
     public function authorFromJson(?string $json, ?Author $author): bool

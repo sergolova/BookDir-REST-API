@@ -9,10 +9,12 @@ Project deployment order:
 3. Launch environment:
 > docker-compose up -d
 4. Enter to the php-fpm container and run the dependency manager
-> docker-compose exec -it php-fpm sh
+> docker exec -it php-fpm sh
+
 > composer update
 6. Check and run migrations:
 > php bin/console doctrine:migrations:list
+
 > php bin/console doctrine:migrations:migrate
 
 The project is available on the port http://localhost:8034/

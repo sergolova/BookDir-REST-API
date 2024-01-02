@@ -74,7 +74,7 @@ class BooksController extends AbstractController
         $result['message'] = $message;
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
     }
 
     #[Route('/books_by_author/{author}', name: 'get_books_by_author', methods: 'GET')]
@@ -100,7 +100,7 @@ class BooksController extends AbstractController
         $result['message'] = $message;
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
 
     }
 
@@ -127,7 +127,7 @@ class BooksController extends AbstractController
         $result['message'] = $message;
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
     }
 
     #[Route('/books/{id}', name: 'edit_book', methods: 'PUT')]
