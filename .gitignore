@@ -1,6 +1,5 @@
 .idea/
 temp/
-.env
 docker/database/
 *.log
 *.*#
