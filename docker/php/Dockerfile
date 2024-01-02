@@ -9,7 +9,8 @@ RUN apt-get update \
         libzip-dev \
         unzip \
         pkg-config \
-        libssl-dev
+        libssl-dev \
+        libpq-dev
     
 RUN pecl install \
         xdebug
@@ -28,4 +29,6 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install zip && \
     docker-php-ext-enable pdo_mysql &&\
     docker-php-ext-install mysqli && \
-    docker-php-ext-enable mysqli
+    docker-php-ext-enable mysqli && \
+    docker-php-ext-install pdo_pgsql && \
+    docker-php-ext-enable pdo_pgsql

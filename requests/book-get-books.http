@@ -1,0 +1,11 @@
+### get books list
+GET {{backend}}/books/?limit=4&page=1
+Accept: application/json
+
+### get books list, invalid page
+GET {{backend}}/books/?limit=4&page=0
+Accept: application/json
+
+### get books list, no params
+GET {{backend}}/books/
+Accept: application/json

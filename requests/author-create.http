@@ -1,0 +1,29 @@
+### Send POST request for creating the Author
+POST {{backend}}/authors
+Content-Type: application/json
+
+{
+  "first_name": "Джейн",
+  "last_name": "Остин",
+  "patronymic": ""
+}
+
+### Send POST request for creating the Author
+POST {{backend}}/authors
+Content-Type: application/json
+
+{
+  "first_name": "Джоан",
+  "last_name": "Роулинг",
+  "patronymic": "Кэтлин"
+}
+
+### Send POST request for creating the Author
+POST {{backend}}/authors
+Content-Type: application/json
+
+{
+  "first_name": "Реджер",
+  "last_name": "Джонсон",
+  "patronymic": ""
+}

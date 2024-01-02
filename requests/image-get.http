@@ -1,0 +1,3 @@
+### get image by id
+GET {{backend}}/images/70248fffd3dd8634969339e33b47b155.png
+Accept: application/json

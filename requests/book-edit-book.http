@@ -1,0 +1,23 @@
+### edit book by id
+PUT {{backend}}/books/23
+Accept: application/json
+
+{
+  "title": "Гарри Поттер и философский камень - 2",
+  "publish_date": "1998-1-1",
+  "description": "ВТОРАЯ книга в серии о молодом волшебнике Гарри Поттере, его приключениях в Хогвартсе и борьбе против темных сил.",
+  "image": "https://upload.wikimedia.org/wikipedia/ru/thumb/b/b4/Harry_Potter_and_the_Philosopher%27s_Stone_%E2%80%94_movie.jpg/208px-Harry_Potter_and_the_Philosopher%27s_Stone_%E2%80%94_movie.jpg",
+  "authors": [12]
+}
+
+### edit book by id, invalid title
+PUT {{backend}}/books/23
+Accept: application/json
+
+{
+  "title": "",
+  "publish_date": "1998-1-1",
+  "description": "ВТОРАЯ книга в серии о молодом волшебнике Гарри Поттере, его приключениях в Хогвартсе и борьбе против темных сил.",
+  "image": "https://upload.wikimedia.org/wikipedia/ru/thumb/b/b4/Harry_Potter_and_the_Philosopher%27s_Stone_%E2%80%94_movie.jpg/208px-Harry_Potter_and_the_Philosopher%27s_Stone_%E2%80%94_movie.jpg",
+  "authors": [12]
+}

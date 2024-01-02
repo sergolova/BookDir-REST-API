@@ -1,0 +1,11 @@
+### get books by author
+GET {{backend}}/books_by_author/Роулинг?limit=100&page=1
+Accept: application/json
+
+### get books by author, no params
+GET {{backend}}/books_by_author/доСтоевсКиЙ
+Accept: application/json
+
+### get books by author, no author for search
+GET {{backend}}/books_by_author/
+Accept: application/json

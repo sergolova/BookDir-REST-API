@@ -1,0 +1,7 @@
+### get authors list
+GET {{backend}}/authors?limit=2&page=2
+Accept: application/json
+
+### get authors list, no params
+GET {{backend}}/authors
+Accept: application/json
