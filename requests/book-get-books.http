@@ -1,9 +1,9 @@
-### get books list
-GET {{backend}}/books/?limit=4&page=1
+### get books list: /{limit}/{page}
+GET {{backend}}/books/2/1
 Accept: application/json
 
 ### get books list, invalid page
-GET {{backend}}/books/?limit=4&page=0
+GET {{backend}}/books/1/0
 Accept: application/json
 
 ### get books list, no params

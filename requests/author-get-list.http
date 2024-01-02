@@ -1,5 +1,5 @@
-### get authors list
-GET {{backend}}/authors?limit=2&page=2
+### get authors list: /{limit}/{page}
+GET {{backend}}/authors/2/2
 Accept: application/json
 
 ### get authors list, no params

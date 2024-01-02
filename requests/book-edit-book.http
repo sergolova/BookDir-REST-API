@@ -1,5 +1,5 @@
-### edit book by id
-PUT {{backend}}/books/23
+### edit book by id: /{id}
+PUT {{backend}}/book/101
 Accept: application/json
 
 {
@@ -11,7 +11,7 @@ Accept: application/json
 }
 
 ### edit book by id, invalid title
-PUT {{backend}}/books/23
+PUT {{backend}}/book/101
 Accept: application/json
 
 {

@@ -25,7 +25,7 @@ class BookRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('b')
             ->innerJoin('b.authors', 'a')
-            ->where('LOWER(a.last_name) LIKE LOWER(:searchAuthor)')
+            ->where("LOWER(a.last_name) LIKE Concat('%',LOWER(:searchAuthor),'%')")
             ->setParameter('searchAuthor', $searchAuthor)
             ->orderBy('b.id','ASC')
             ->setMaxResults($limit)

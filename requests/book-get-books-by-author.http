@@ -1,8 +1,8 @@
-### get books by author
-GET {{backend}}/books_by_author/Роулинг?limit=100&page=1
+### get books by author: /{author}/{limit}/{page}
+GET {{backend}}/books_by_author/Роулинг/5/1
 Accept: application/json
 
-### get books by author, no params
+### get books by author, no params: /{author}
 GET {{backend}}/books_by_author/доСтоевсКиЙ
 Accept: application/json
 

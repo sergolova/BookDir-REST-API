@@ -50,20 +50,21 @@ class BooksController extends AbstractController
         return $this->json($result, $status);
     }
 
-    #[Route('/books', name: 'get_books', methods: 'GET')]
-    public function getBooks(Request $request): Response
+    #[Route('/books/{limit}/{page}', name: 'get_books',
+        requirements: ['page' => '\d+', 'limit' => '\d+'],
+        defaults: ['page' => 1, 'limit' => 10],
+        methods: 'GET')]
+    public function getBooks(int $limit, int $page): Response
     {
         $status = Response::HTTP_BAD_REQUEST;
         $message = 'Get books error';
         $result = [];
 
         try {
-            $page = $request->query->get('page') ?? 1;
-            $limit = $request->query->get('limit') ?? 10;
             $offset = ($page - 1) * $limit;
 
             $books = $this->bookRepository->findBy(
-                [], ['id'=>'ASC'], $limit, $offset);
+                [], ['id' => 'ASC'], $limit, $offset);
 
             $message = 'Get books success';
             $status = Response::HTTP_OK;
@@ -74,21 +75,21 @@ class BooksController extends AbstractController
         $result['message'] = $message;
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
     }
 
-    #[Route('/books_by_author/{author}', name: 'get_books_by_author', methods: 'GET')]
-    public function getBooksByAuthor(string $author, Request $request): Response
+    #[Route('/books_by_author/{author}/{limit}/{page}', name: 'get_books_by_author',
+        requirements: ['page' => '\d+', 'limit' => '\d+', 'author' => '[^/]+'],
+        defaults: ['page' => 1, 'limit' => 10],
+        methods: 'GET')]
+    public function getBooksByAuthor(string $author, int $limit, int $page): Response
     {
         $status = Response::HTTP_BAD_REQUEST;
         $message = 'Find books error';
         $result = [];
 
         try {
-            $page = $request->query->get('page') ?? 1;
-            $limit = $request->query->get('limit') ?? 10;
             $offset = ($page - 1) * $limit;
-
             $books = $this->bookRepository->findByAuthor($author, $limit, $offset);
 
             $message = 'Get books success';
@@ -100,11 +101,11 @@ class BooksController extends AbstractController
         $result['message'] = $message;
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
 
     }
 
-    #[Route('/books/{id}', name: 'get_book', methods: 'GET')]
+    #[Route('/book/{id}', name: 'get_book', requirements: ['id' => '\d+'], methods: 'GET')]
     public function getBook(int $id): Response
     {
         $status = Response::HTTP_BAD_REQUEST;
@@ -127,10 +128,10 @@ class BooksController extends AbstractController
         $result['message'] = $message;
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
     }
 
-    #[Route('/books/{id}', name: 'edit_book', methods: 'PUT')]
+    #[Route('/book/{id}', name: 'edit_book', methods: 'PUT')]
     public function editBook(int $id, Request $request): Response
     {
         $status = Response::HTTP_BAD_REQUEST;

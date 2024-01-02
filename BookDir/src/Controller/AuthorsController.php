@@ -10,11 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class AuthorsController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly AuthorRepository $authorRepository
+        private readonly AuthorRepository       $authorRepository
     )
     {
     }
@@ -46,16 +47,17 @@ class AuthorsController extends AbstractController
         return $this->json($result, $status);
     }
 
-    #[Route('/authors', name: 'get_authors', methods: 'GET')]
-    public function getAuthors(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/authors/{limit}/{page}', name: 'get_authors',
+        requirements: ['page' => '\d+', 'limit' => '\d+'],
+        defaults: ['page' => 1, 'limit' => 10],
+        methods: 'GET')]
+    public function getAuthors(int $limit, int $page): Response
     {
         $status = Response::HTTP_BAD_REQUEST;
         $message = 'Get authors error';
         $result = [];
 
         try {
-            $page = $request->query->get('page') ?? 1;
-            $limit = $request->query->get('limit') ?? 10;
             $offset = ($page - 1) * $limit;
 
             $authors = $this->authorRepository->findBy(
@@ -70,7 +72,7 @@ class AuthorsController extends AbstractController
         $result['message'] = $message;
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
     }
 
     public function authorFromJson(?string $json, ?Author $author): bool
