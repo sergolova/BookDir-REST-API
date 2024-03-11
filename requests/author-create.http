@@ -4,8 +4,7 @@ Content-Type: application/json
 
 {
   "first_name": "Джейн",
-  "last_name": "Остин",
-  "patronymic": ""
+  "last_name": "Остин"
 }
 
 ### Send POST request for creating the Author
@@ -24,6 +23,5 @@ Content-Type: application/json
 
 {
   "first_name": "Реджер",
-  "last_name": "Джонсон",
-  "patronymic": ""
+  "last_name": "Джонсон"
 }

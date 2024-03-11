@@ -18,6 +18,10 @@ framework:
     php_errors:
         log: true
 
+    serializer:
+        default_context:
+            json_encode_options: JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+
 when@test:
     framework:
         test: true

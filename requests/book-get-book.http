@@ -1,5 +1,5 @@
 ### get one book by ID: /{id}
-GET {{backend}}/book/101
+GET {{backend}}/book/1
 Accept: application/json
 
 ### get one book by ID, invalid id

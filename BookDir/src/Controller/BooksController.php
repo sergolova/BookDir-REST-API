@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\BookDto;
 use App\Entity\Author;
 use App\Entity\Book;
 use App\Repository\BookRepository;
@@ -9,8 +10,10 @@ use App\Service\ImagesService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BooksController extends AbstractController
@@ -24,30 +27,24 @@ class BooksController extends AbstractController
     }
 
     #[Route('/books', name: 'create_book', methods: 'POST')]
-    public function createBook(Request $request): Response
+    public function createBook(#[MapRequestPayload] BookDto $bookDto): Response
     {
-        $status = Response::HTTP_BAD_REQUEST;
-        $message = 'Book creating error';
-        $result = [];
-
         try {
-            $content = $request->getContent();
             $book = new Book();
+            $this->bookFromDto($book, $bookDto);
 
-            if ($this->bookFromJson($content, $book)) {
-                $this->entityManager->persist($book);
-                $this->entityManager->flush();
+            $this->entityManager->persist($book);
+            $this->entityManager->flush();
 
-                $status = Response::HTTP_CREATED;
-                $message = 'Book created';
-                $result['id'] = $book->getId();
-            }
-        } catch (\Throwable) {
+            $status = Response::HTTP_CREATED;
+            $result = $book;
+        } catch (\Exception $e) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $result['error'] = $e->getMessage();
         }
 
-        $result['message'] = $message;
-
-        return $this->json($result, $status);
+        return $this->json($result, $status, [],
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
     }
 
     #[Route('/books/{limit}/{page}', name: 'get_books',
@@ -56,23 +53,18 @@ class BooksController extends AbstractController
         methods: 'GET')]
     public function getBooks(int $limit, int $page): Response
     {
-        $status = Response::HTTP_BAD_REQUEST;
-        $message = 'Get books error';
-        $result = [];
-
         try {
             $offset = ($page - 1) * $limit;
 
             $books = $this->bookRepository->findBy(
                 [], ['id' => 'ASC'], $limit, $offset);
 
-            $message = 'Get books success';
             $status = Response::HTTP_OK;
-            $result['books'] = $books;
-        } catch (\Throwable) {
+            $result = $books;
+        } catch (\Exception $e) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $result['error'] = $e->getMessage();
         }
-
-        $result['message'] = $message;
 
         return $this->json($result, $status, [],
             ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
@@ -84,21 +76,16 @@ class BooksController extends AbstractController
         methods: 'GET')]
     public function getBooksByAuthor(string $author, int $limit, int $page): Response
     {
-        $status = Response::HTTP_BAD_REQUEST;
-        $message = 'Find books error';
-        $result = [];
-
         try {
             $offset = ($page - 1) * $limit;
             $books = $this->bookRepository->findByAuthor($author, $limit, $offset);
 
-            $message = 'Get books success';
             $status = Response::HTTP_OK;
             $result['books'] = $books;
-        } catch (\Throwable) {
+        } catch (\Exception $e) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $result['error'] = $e->getMessage();
         }
-
-        $result['message'] = $message;
 
         return $this->json($result, $status, [],
             ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
@@ -108,80 +95,69 @@ class BooksController extends AbstractController
     #[Route('/book/{id}', name: 'get_book', requirements: ['id' => '\d+'], methods: 'GET')]
     public function getBook(int $id): Response
     {
-        $status = Response::HTTP_BAD_REQUEST;
-        $message = 'Get book error';
-        $result = [];
-
         try {
             $book = $this->bookRepository->findOneBy(['id' => $id]);
 
             if (!$book) {
-                $status = Response::HTTP_NOT_FOUND;
+                return new Response(null, Response::HTTP_NOT_FOUND);
             } else {
                 $status = Response::HTTP_OK;
-                $message = 'Get book success';
-                $result['book'] = $book;
+                $result = $book;
             }
-        } catch (\Throwable) {
+        } catch (\Exception $e) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $result['error'] = $e->getMessage();
         }
-
-        $result['message'] = $message;
 
         return $this->json($result, $status, [],
             ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
     }
 
     #[Route('/book/{id}', name: 'edit_book', methods: 'PUT')]
-    public function editBook(int $id, Request $request): Response
+    public function editBook(int $id, #[MapRequestPayload] BookDto $bookDto): Response
     {
-        $status = Response::HTTP_BAD_REQUEST;
-        $message = 'Update book error';
-        $result = [];
-
         try {
-            $content = $request->getContent();
             $book = $this->bookRepository->findOneBy(['id' => $id]);
-
-            if ($this->bookFromJson($content, $book)) {
-                $this->entityManager->persist($book);
-                $this->entityManager->flush();
-
-                $status = Response::HTTP_OK;
-                $message = 'Update book success';
+            if (!$book) {
+                throw new Exception('Book not found');
             }
-        } catch (\Throwable) {
-        }
+            $this->bookFromDto($book, $bookDto);
+            $this->entityManager->persist($book);
+            $this->entityManager->flush();
 
-        $result['message'] = $message;
+            $status = Response::HTTP_OK;
+            $result = $book;
+        } catch (\Exception $e) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $result['error'] = $e->getMessage();
+        }
 
         return $this->json($result, $status, [],
-            ['json_encode_options' => JSON_UNESCAPED_SLASHES]);
+            ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
     }
 
-    public function bookFromJson(?string $json, ?Book $book): bool
+    /**
+     * @throws \Exception
+     */
+    public function bookFromDto(Book $book, BookDto $bookDto): void
     {
-        $data = json_decode($json, true);
-        $title = trim($data['title']);
-        $dateStr = trim($data['publish_date']);
+        $book->setTitle($bookDto->title);
+        $book->setPublishDate(new DateTime($bookDto->publish_date));
+        $book->setDescription($bookDto->description);
 
-        if ($data && $book && $title && $dateStr) {
-            $book->setTitle($title);
-            $book->setPublishDate(new DateTime($dateStr));
-            $book->setDescription(@$data['description']);
+        $book->clearAuthors();
+        $authors = $this->entityManager->getRepository(Author::class)->findBy(
+            ['id' => $bookDto->authors]);
 
-            $fileName = isset($data['image']) ? $this->imagesService->saveImageFromUrl($data['image']) : '';
-            $book->setImage($fileName);
-
-            $book->clearAuthors();
-            $authors = $this->entityManager->getRepository(Author::class)->findBy(
-                ['id' => $data['authors']]);
-            foreach ($authors as $a) {
-                $book->addAuthor($a);
-            }
-
-            return $book->getAuthors()->count() > 0;
-        } else {
-            return false;
+        if (count($authors) < count($bookDto->authors)) {
+            throw new Exception('Author not exists');
         }
+
+        foreach ($authors as $a) {
+            $book->addAuthor($a);
+        }
+
+        $fileName = $this->imagesService->saveImageFromUrl($bookDto->image);
+        $book->setImage($fileName);
     }
 }

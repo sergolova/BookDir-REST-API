@@ -25,7 +25,7 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $publish_date = null;
 
     #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'books')]

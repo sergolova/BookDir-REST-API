@@ -1,59 +1,59 @@
-### Send POST request for author create
+### Send POST request for book create
 POST {{backend}}/books
 Content-Type: application/json
 
 {
   "title": "Гарри Поттер и философский камень",
-  "publish_date": "1997-1-1",
+  "publish_date": "1997-01-01",
   "description": "Первая книга в серии о молодом волшебнике Гарри Поттере, его приключениях в Хогвартсе и борьбе против темных сил.",
   "image": "https://upload.wikimedia.org/wikipedia/ru/thumb/b/b4/Harry_Potter_and_the_Philosopher%27s_Stone_%E2%80%94_movie.jpg/208px-Harry_Potter_and_the_Philosopher%27s_Stone_%E2%80%94_movie.jpg",
-  "authors": [12]
+  "authors": [2]
 }
 
-### Send POST request for author create
+### Send POST request for book create
 POST {{backend}}/books
 Content-Type: application/json
 
 {
   "title": "Мастер и Маргарита",
-  "publish_date": "1928-1-1",
+  "publish_date": "1928-01-01",
   "description": "Фантастический роман, сочетающий аллегорические элементы и сатиру, рассказывающий о приключениях дьявола в Москве.",
   "image": "https://upload.wikimedia.org/wikipedia/ru/thumb/a/aa/%D0%9C%D0%B0%D1%81%D1%82%D0%B5%D1%80_%D0%B8_%D0%9C%D0%B0%D1%80%D0%B3%D0%B0%D1%80%D0%B8%D1%82%D0%B0_%28%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0%29.jpg/274px-%D0%9C%D0%B0%D1%81%D1%82%D0%B5%D1%80_%D0%B8_%D0%9C%D0%B0%D1%80%D0%B3%D0%B0%D1%80%D0%B8%D1%82%D0%B0_%28%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0%29.jpg",
-  "authors": [13]
+  "authors": [3]
 }
 
-### Send POST request for author create
+### Send POST request for book create
 POST {{backend}}/books
 Content-Type: application/json
 
 {
   "title": "The Girl with the Dragon Tattoo",
-  "publish_date": "1986-1-1",
+  "publish_date": "1986-01-01",
   "description": "Роман расследует таинственное исчезновение молодой наследницы предприятия и вовлекает читателя в мир интриг, заговоров и мести",
   "image": "https://upload.wikimedia.org/wikipedia/ru/9/91/%D0%94%D0%B5%D0%B2%D1%83%D1%88%D0%BA%D0%B0_%D1%81_%D1%82%D0%B0%D1%82%D1%83%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%BE%D0%B9_%D0%B4%D1%80%D0%B0%D0%BA%D0%BE%D0%BD%D0%B0_%28%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%2C_2009%29.jpg",
-  "authors": [14,15]
+  "authors": [4]
 }
 
-### Send POST request for author create
+### Send POST request for book create
 POST {{backend}}/books
 Content-Type: application/json
 
 {
   "title": "Pride and Prejudice",
-  "publish_date": "1931-1-1",
+  "publish_date": "1931-01-01",
   "description": "рассказывает о жизни и любви Элизабет Беннет и мистера Дарси в английском обществе начала XIX века",
   "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/PrideAndPrejudiceTitlePage.jpg/247px-PrideAndPrejudiceTitlePage.jpg",
-  "authors": [11]
+  "authors": [1]
 }
 
-### Send POST request for author create
+### Send POST request for book create
 POST {{backend}}/books
 Content-Type: application/json
 
 {
   "title": "Идиот",
-  "publish_date": "1869-1-1",
+  "publish_date": "1869-01-01",
   "description": "Роман рассказывает о приключениях князя Мышкина, человека, который вернулся из-за границы после лечения. Книга затрагивает темы нравственности, идеализма и конфликтов общества.",
   "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/%D0%94%D0%BE%D1%81%D1%82%D0%BE%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%A4%D1%91%D0%B4%D0%BE%D1%80._%D0%98%D0%B4%D0%B8%D0%BE%D1%82._%D0%A7%D0%B0%D1%81%D1%82%D0%B8_1_%D0%B8_2._%D0%A2%D0%B8%D1%82%D1%83%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D0%BB%D0%B8%D1%81%D1%82_%281874%29.jpg/227px-%D0%94%D0%BE%D1%81%D1%82%D0%BE%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%A4%D1%91%D0%B4%D0%BE%D1%80._%D0%98%D0%B4%D0%B8%D0%BE%D1%82._%D0%A7%D0%B0%D1%81%D1%82%D0%B8_1_%D0%B8_2._%D0%A2%D0%B8%D1%82%D1%83%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D0%BB%D0%B8%D1%81%D1%82_%281874%29.jpg",
-  "authors": [13]
+  "authors": [3]
 }

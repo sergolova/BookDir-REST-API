@@ -9,38 +9,45 @@ class ImagesService
     const IMAGE_DIR = '/images';
     const IMAGE_ROUTE = '/images';
 
+    private string $imageDir;
+
     public function __construct(
         private readonly ParameterBagInterface $parameters
     )
     {
+        $this->imageDir = $this->parameters->get('kernel.project_dir') . self::IMAGE_DIR;
+
+        if (!file_exists($this->imageDir)) {
+            mkdir($this->imageDir, 0775, true);
+        }
     }
 
-    public function saveImageFromUrl(?string $imageUrl): string
+    /**
+     * @throws \Exception
+     */
+    public function saveImageFromUrl(string $imageUrl): string
     {
-        if ($imageUrl) {
-            $imageContent = file_get_contents($imageUrl);
+        $options  = ['http' => ['user_agent' => 'curl/7.64.1']];
+        $context  = stream_context_create($options);
+        $imageContent = file_get_contents($imageUrl,false, $context);
 
-            if ($imageContent) {
-                $fileId = md5($imageContent) . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
-                $dir = $this->parameters->get('kernel.project_dir') . self::IMAGE_DIR;
-
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0775, true);
-                }
-
-                if (file_put_contents($dir . '/' . $fileId, $imageContent) !== false) {
-                    return $fileId;
-                }
-            }
+        if ($imageContent === false) {
+            throw new \Exception('Failed to fetch image content');
         }
 
-        return '';
+        $fileId = md5($imageContent) . '.' . pathinfo($imageUrl, PATHINFO_EXTENSION);
+
+        if (file_put_contents($this->imageDir . '/' . $fileId, $imageContent) !== false) {
+            return $fileId;
+        } else {
+            throw new \Exception('Failed to save image content');
+        }
     }
 
     public function getImageRoute(string $fileId): string|false
     {
         $file = $this->parameters->get('kernel.project_dir') . self::IMAGE_DIR . '/' . $fileId;
-        $res =  self::IMAGE_ROUTE . '/' . $fileId;
+        $res = self::IMAGE_ROUTE . '/' . $fileId;
 
         return $fileId && file_exists($file) ? $res : false;
     }

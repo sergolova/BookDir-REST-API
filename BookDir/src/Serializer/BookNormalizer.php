@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Serializer;
 
 use App\Entity\Book;
@@ -14,7 +15,8 @@ class BookNormalizer implements NormalizerInterface, NormalizerAwareInterface
 
     public function __construct(
         private readonly ImagesService $imagesService
-    ) {
+    )
+    {
     }
 
     public function normalize($object, string $format = null, array $context = []): array
@@ -25,21 +27,10 @@ class BookNormalizer implements NormalizerInterface, NormalizerAwareInterface
             'description' => $object->getDescription(),
             'image' => (string)$this->imagesService->getImageRoute($object->getImage()),
             'publish_date' => $object->getPublishDate()->format('Y-m-d'),
-            'authors' => $this->normalizeAuthors($object->getAuthors()),
+            'authors' => $object->getAuthors()->map(fn($a) => $a->getId())->toArray(),
         ];
 
         return $data;
-    }
-
-    private function normalizeAuthors($authors)
-    {
-        $authorIds = [];
-
-        foreach ($authors as $author) {
-            $authorIds[] = $author->getId();
-        }
-
-        return $authorIds;
     }
 
     public function supportsNormalization($data, string $format = null, array $context = []): bool

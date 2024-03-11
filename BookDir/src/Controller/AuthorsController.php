@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
+use App\DTO\AuthorDto;
 use App\Entity\Author;
 use App\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -21,28 +22,23 @@ class AuthorsController extends AbstractController
     }
 
     #[Route('/authors', name: 'create_author', methods: 'POST')]
-    public function createAuthor(Request $request): Response
+    public function createAuthor(#[MapRequestPayload] AuthorDto $authorDto): Response
     {
-        $status = Response::HTTP_BAD_REQUEST;
-        $message = 'Author creating error';
-        $result = [];
-
         try {
-            $content = $request->getContent();
             $author = new Author();
+            $author->setFirstName($authorDto->first_name);
+            $author->setLastName($authorDto->last_name);
+            $author->setPatronymic($authorDto->patronymic);
 
-            if ($this->authorFromJson($content, $author)) {
-                $this->entityManager->persist($author);
-                $this->entityManager->flush();
+            $this->entityManager->persist($author);
+            $this->entityManager->flush();
 
-                $status = Response::HTTP_CREATED;
-                $message = 'Author created';
-                $result['id'] = $author->getId();
-            }
-        } catch (\Throwable) {
+            $status = Response::HTTP_CREATED;
+            $result = $author;
+        } catch (\Exception $e) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $result['error'] = $e->getMessage();
         }
-
-        $result['message'] = $message;
 
         return $this->json($result, $status);
     }
@@ -53,8 +49,6 @@ class AuthorsController extends AbstractController
         methods: 'GET')]
     public function getAuthors(int $limit, int $page): Response
     {
-        $status = Response::HTTP_BAD_REQUEST;
-        $message = 'Get authors error';
         $result = [];
 
         try {
@@ -64,31 +58,13 @@ class AuthorsController extends AbstractController
                 [], ['id' => 'ASC'], $limit, $offset);
 
             $status = Response::HTTP_OK;
-            $message = 'Get authors success';
-            $result['authors'] = $authors;
-        } catch (\Throwable) {
+            $result = $authors;
+        } catch (\Exception $e) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $result['error'] = $e->getMessage();
         }
-
-        $result['message'] = $message;
 
         return $this->json($result, $status, [],
             ['json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
-    }
-
-    public function authorFromJson(?string $json, ?Author $author): bool
-    {
-        $data = json_decode($json, true);
-        $first_name = trim($data['first_name']);
-        $last_name = trim($data['last_name']);
-
-        if ($data && $author && $first_name && strlen($last_name) >= 3) {
-            $author->setFirstName($first_name);
-            $author->setLastName($last_name);
-            $author->setPatronymic(@$data['patronymic']);
-
-            return true;
-        } else {
-            return false;
-        }
     }
 }
